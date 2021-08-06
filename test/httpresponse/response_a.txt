@@ -1,0 +1,68 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: PARAM00=my; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=4A1E8F0C0F06F1D6DE2711D4D7A9F621; Path=/; HttpOnly
+Content-Type: text/html;charset=UTF-8
+Content-Language: ja-JP
+Date: Tue, 03 Sep 2019 13:23:41 GMT
+
+<!DOCTYPE html>
+
+<!--
+  ~ Copyright 2007-2018 CAM Corporation.
+  -->
+
+<html lang="ja" ng-app="camNg.shop.scpayment">
+<head lang="en">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1024,user-scalable=no" />
+    <title>Login</title>
+    </head>
+
+<body>
+
+<form action="login" method="post" class="form cam-form-search">
+    <div class="col-md-2 col-xs-offset-10 ctrl-language">
+        <label class="control-label">言語</label>
+        <select class="form-control" id="languageModeCode" name="languageModeCode">
+            <option value="0" selected="selected">日本語</option>
+            <option value="1">English</option>
+        </select>
+    </div>
+    <div style="padding-top:160px;">
+        <div class="panel panel-default login-panel center-block">
+            <br />
+            <br />
+            <div class="form-group clearfix">
+                <label class="col-xs-4 control-label">Login ID </label>
+                <div class="col-xs-8">
+                    <input type="text" autocomplete="off" id="loginId" name="loginId" value="" />
+                    <br />
+                </div>
+            </div>
+            <div class="form-group clearfix">
+                <label class="col-xs-4 control-label">Password</label>
+                <div class="col-xs-8">
+                    <input type="password" id="password" name="password" value="" />
+                    <br />
+                    <p style="display:none;"><input type="password" name="dummy00" /></p>
+                    <p style="display:none;"><input type="password" name="dummy01" /></p>
+                </div>
+            </div>
+
+            <div class="form-group btn-area">
+                <button type="submit" class="btn btn-login" name="login">Login</button>
+                <button type="submit" name="changePassword" class="btn-change">Change Password</button>
+            </div>
+        </div>
+
+        <div class="login-panel center-block">
+            <div class="form-group btn-area">
+                <button type="submit" class="btn btn-login btn-google" name="googleSignIn">Googleアカウントでログイン</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

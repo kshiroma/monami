@@ -1,0 +1,12 @@
+[package]
+name = "monami"
+version = "0.1.0"
+authors = ["kshiroma <shiroma@cam-net.co.jp>"]
+edition = "2018"
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+rand="0.3.0"
+regex = "1"
+log = { version = "0.4", features = ["std", "serde"] }
+env_logger = "0.7.1"
