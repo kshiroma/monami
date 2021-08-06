@@ -12,3 +12,6 @@ Cargo.lock
 # For Jetbrains IDE
 /.idea/
 *.iml
+
+/src/main.rs
+/src/routing_config.rs
