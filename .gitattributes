@@ -1,0 +1,14 @@
+*.gif  binary
+*.png  binary
+*.jpeg binary
+*.jpg  binary
+*.tiff binary
+*.ico  binary
+*.jasper  binary
+*.ttf  binary
+*.xlsx  binary
+*.jar  binary
+
+*.bat eol=crlf
+*.cmd eol=crlf
+*     eol=lf
