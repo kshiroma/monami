@@ -4,7 +4,8 @@ use crate::server::http_request::HttpRequestInfo;
 pub fn create_sample_config() -> ServerConfig {
     let mut config = ServerConfig::new();
     config.add(RoutingRule::new("set_routing_number".to_string(), set_routing_number));
-    config.add(RoutingRule::new("routing".to_string(), routing));
+    config.add(RoutingRule::new("routing".to_string(), premium));
+    config.add(RoutingRule::new("freesia".to_string(), freesia));
     return config;
 }
 
@@ -19,10 +20,31 @@ fn set_routing_number(config: &ServerConfig, request: &HttpRequestInfo) -> Optio
     return None;
 }
 
-fn routing(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConnectionInfo> {
-    const jt0100: &str = "dev-jt0100";
-    const jt0001: &str = "dev-jt0001";
+const JT0100: &str = "dev-jt0100";
+const JT0001: &str = "dev-jt0001";
 
+fn freesia(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConnectionInfo> {
+    let path: &str = if request.http_first_line.uri.eq_ignore_ascii_case("/favicon.ico") {
+        "/cattleya/favicon.ico"
+    } else {
+        &request.http_first_line.uri
+    };
+    const relayInfo: &str = "freesia";
+    let relay = if true {
+        let n = config.get_routing_number();
+        match n {
+            0 => jt0100(path,relayInfo),
+            1 => jt0001(path,relayInfo),
+            2 => jt0100(path,relayInfo),
+            _ => None
+        }
+    } else {
+        None
+    };
+    return relay;
+}
+
+fn premium(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConnectionInfo> {
     let path: &str = if request.http_first_line.uri.eq_ignore_ascii_case("/favicon.ico") {
         "/cattleya/favicon.ico"
     } else {
@@ -32,7 +54,6 @@ fn routing(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConn
     let relay = if true {
         let i = config.get_count();
         let n = config.get_routing_number();
-        println!("connt {}", i);
         match n {
             1 =>
                 Some(RelayConnectionInfo::new2(
@@ -40,13 +61,6 @@ fn routing(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConn
                     8000,
                     path,
                     "1__",
-                )),
-            2 =>
-                Some(RelayConnectionInfo::new2(
-                    jt0100,
-                    8000,
-                    path,
-                    "2__",
                 )),
             _ =>
                 if i % 2 == 0 {
@@ -70,6 +84,27 @@ fn routing(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConn
     };
     return relay;
 }
+
+
+
+fn jt0001(path:&str , relayInfo: &str) -> Opton<RelayConnectionInfo> {
+    Some(RelayConnectionInfo::new2(
+        JT0001,
+        8000,
+        path,
+        relayInfo,
+    ))
+}
+
+fn jt0100(path:&str , relayInfo: &str) -> Option<RelayConnectionInfo> {
+    Some(RelayConnectionInfo::new2(
+        JT1000,
+        8000,
+        path,
+        relayInfo,
+    ))
+}
+
 
 fn routing_milliondollar(request: &HttpRequestInfo) -> Option<RelayConnectionInfo> {
     let prefix: &str = "million-dollar";

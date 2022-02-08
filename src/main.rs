@@ -18,5 +18,5 @@ fn main() {
     env::set_var("RUST_LOG", "error");
     env_logger::init();
     let config = create_sample_config();
-    server::listen(config, 2131).unwrap();
+    server::listen(config, 6731).unwrap();
 }
