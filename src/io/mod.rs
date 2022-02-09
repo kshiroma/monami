@@ -41,10 +41,3 @@ fn test_read_first_line() {
     let first_line = read_line(&mut file);
     assert_eq!(first_line, "GET /favicon.ico HTTP/1.1");
 }
-
-
-#[test]
-fn test() {
-    let aaa = "aaa".to_string();
-    println!("{}",aaa);
-}

@@ -98,7 +98,7 @@ pub fn service_unavailable(writer: &mut dyn Write) -> std::io::Result<()> {
     return Ok(());
 }
 
-pub fn set_routing_number(writer: &mut dyn Write, number: i32) -> std::io::Result<()> {
+pub fn set_routing_number(writer: &mut dyn Write, number: u8) -> std::io::Result<()> {
     let status = HttpStatus::Ok;
     let code = status.get().unwrap();
     let string = status.get_as_string().unwrap();

@@ -29,11 +29,3 @@ pub fn listen(config: ServerConfig, port: i32) -> std::io::Result<()> {
     }
     Ok(())
 }
-
-#[test]
-fn test() {
-    use crate::routing_sample::create_sample_config;
-    let config = create_sample_config();
-    listen(config, 80).unwrap();
-}
-

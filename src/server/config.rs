@@ -117,8 +117,8 @@ impl RoutingRule {
 
 pub struct ServerConfig {
     routing_rules: Vec<RoutingRule>,
-    pub count: Mutex<i32>,
-    pub routing_number: Mutex<i32>,
+    pub count: Mutex<u64>,
+    pub routing_number: Mutex<u8>,
 }
 
 impl ServerConfig {
@@ -127,7 +127,7 @@ impl ServerConfig {
         ServerConfig {
             routing_rules: vec,
             count: Mutex::new(0),
-            routing_number: Mutex::new(1),
+            routing_number: Mutex::new(0),
         }
     }
 
@@ -164,22 +164,22 @@ impl ServerConfig {
 //        return None;
 //    }
 
-    pub fn add_count(&self) -> i32 {
+    pub fn add_count(&self) -> u64 {
         let mut m = self.count.lock().unwrap();
         *m = *m + 1;
         return *m;
     }
 
-    pub fn get_count(&self) -> i32 {
+    pub fn get_count(&self) -> u64 {
         let m = self.count.lock().unwrap();
         return *m;
     }
-    pub fn set_routing_number(&self, number: i32) -> i32 {
+    pub fn set_routing_number(&self, number: u8) -> u8 {
         let mut m = self.routing_number.lock().unwrap();
         *m = number;
         return *m;
     }
-    pub fn get_routing_number(&self) -> i32 {
+    pub fn get_routing_number(&self) -> u8 {
         let m = self.routing_number.lock().unwrap();
         return *m;
     }

@@ -10,3 +10,4 @@ rand="0.3.0"
 regex = "1"
 log = { version = "0.4", features = ["std", "serde"] }
 env_logger = "0.7.1"
+url = "2.2.2"
