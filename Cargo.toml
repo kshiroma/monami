@@ -1,7 +1,7 @@
 [package]
 name = "monami"
 version = "0.1.0"
-authors = ["kshiroma <shiroma@cam-net.co.jp>"]
+authors = ["kshiroma <kshiroma0622@>"]
 edition = "2018"
 
 [dependencies]

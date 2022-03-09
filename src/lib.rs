@@ -1,7 +1,30 @@
+extern crate rand;
+extern crate regex;
+
+use std::env;
+
+use env_logger;
+
+use crate::routing_config::create_sample_config;
+use crate::server::config::ServerConfig;
+
+pub mod http;
+pub mod server;
+pub mod io;
+
+#[cfg(test)]
+#[test]
+fn test() {
+    env::set_var("RUST_LOG", "error");
+    env_logger::init();
+    let config = create_sample_config();
+    server::listen(config, 6731).unwrap();
+}
+
 use crate::server::config::{RelayConnectionInfo, RoutingRule, ServerConfig};
 use crate::server::http_request::HttpRequestInfo;
 
-pub fn create_sample_config() -> ServerConfig {
+fn create_sample_config() -> ServerConfig {
     let mut config = ServerConfig::new();
     config.add(RoutingRule::new("set_routing_number".to_string(), set_routing_number));
     config.add(RoutingRule::new("routing".to_string(), routing));
