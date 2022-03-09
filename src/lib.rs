@@ -5,7 +5,6 @@ use std::env;
 
 use env_logger;
 
-use crate::routing_config::create_sample_config;
 use crate::server::config::ServerConfig;
 
 pub mod http;
@@ -21,7 +20,7 @@ fn test() {
     server::listen(config, 6731).unwrap();
 }
 
-use crate::server::config::{RelayConnectionInfo, RoutingRule, ServerConfig};
+use crate::server::config::{RelayConnectionInfo, RoutingRule};
 use crate::server::http_request::HttpRequestInfo;
 
 fn create_sample_config() -> ServerConfig {
