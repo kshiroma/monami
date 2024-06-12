@@ -22,6 +22,7 @@ fn test() {
 
 use crate::server::config::{RelayConnectionInfo, RoutingRule};
 use crate::server::http_request::HttpRequestInfo;
+use log::logger;
 
 fn create_sample_config() -> ServerConfig {
     let mut config = ServerConfig::new();
@@ -43,10 +44,10 @@ fn set_routing_number(config: &ServerConfig, request: &HttpRequestInfo) -> Optio
 
 fn routing(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConnectionInfo> {
     const HOST_A: &str = "localhost";
-    const PORT_A:i32 = 8081;
+    const PORT_A:i32 = 8000;
 
     const HOST_B: &str = "localhost";
-    const PORT_B:i32 = 8080;
+    const PORT_B:i32 = 8000;
 
 
     let path: &str = if request.http_first_line.uri.eq_ignore_ascii_case("/favicon.ico") {
@@ -58,7 +59,7 @@ fn routing(config: &ServerConfig, request: &HttpRequestInfo) -> Option<RelayConn
     let relay = if true {
         let i = config.get_count();
         let n = config.get_routing_number();
-        println!("connt {}", i);
+        log::trace!("connt {}", i);
         match n {
             1 =>
                 Some(RelayConnectionInfo::new2(

@@ -15,15 +15,15 @@ pub fn listen(config: ServerConfig, port: i32) -> std::io::Result<()> {
         let stream = match stream {
             Ok(stream) => stream,
             Err(e) => {
-                println!("An error occurred while accepting a connection:{}", e);
+                log::error!("An error occurred while accepting a connection:{}", e);
                 continue;
             }
         };
-        std::thread::spawn(move || -> std::io::Result<()> {
-            log::debug!("worker start");
+        std::thread::spawn( || -> std::io::Result<()> {
+            log::trace!("worker start");
             let worker = worker::Worker::new(rc0);
             let result = worker.handle(stream);
-            log::debug!("worker end.");
+            log::trace!("worker end.");
             return result;
         });
     }

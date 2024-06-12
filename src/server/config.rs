@@ -40,7 +40,7 @@ impl RelayConnectionInfo {
         return RelayConnectionInfo {
             host: host.to_string(),
             port,
-            path: path.to_string(),
+            path: path[0..1].to_string(),
             relayInfo: if relayInfo.is_empty() { None } else { Some(relayInfo.to_string()) },
             response,
         };

@@ -44,8 +44,8 @@ impl Downstream {
         }
         let response = &self.response;
         for header in &response.http_response_header.headers {
-            let name = &header.name;
-            let value = &header.value;
+            //let (name,value)  = self.relay.header(header);
+            let (name,value) = (&header.name,&header.value);
             string.push_str(name);
             string.push_str(": ");
             string.push_str(value);
@@ -78,7 +78,7 @@ impl Downstream {
         log::trace!("end send response header.")
     }
 
-    pub fn send_body(&self, reader: &mut dyn Read, writer: &mut dyn Write) {
+    pub fn send_body(&self, reader: &mut dyn BufRead, writer: &mut dyn Write) {
         log::trace!("start send_body");
         let data_length = self.response.http_response_header.content_length;
         log::trace!("let data_length = self.response.http_response_header.content_length;");
@@ -96,6 +96,7 @@ impl Downstream {
                 log::trace!("response {} data",String::from_utf8_lossy(&buf[0..31]));
                 unsent_data_length = unsent_data_length - read_length;
                 log::trace!("unsent_data_length is {}",unsent_data_length);
+                //ここタイムアウトを設ける
             }
         } else if data_length == 0 {
             //何もしない
