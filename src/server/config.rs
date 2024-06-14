@@ -1,6 +1,5 @@
 use std::io::{BufRead, Write};
-use std::net::{TcpStream, ToSocketAddrs};
-use std::ptr::null;
+use std::net::TcpStream;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
@@ -40,7 +39,7 @@ impl RelayConnectionInfo {
         return RelayConnectionInfo {
             host: host.to_string(),
             port,
-            path: path[0..1].to_string(),
+            path: path.to_string(),
             relayInfo: if relayInfo.is_empty() { None } else { Some(relayInfo.to_string()) },
             response,
         };
@@ -51,9 +50,8 @@ impl RelayConnectionInfo {
     }
 
     pub fn get_address(&self) -> String {
-        let mut host = (&self.host).to_string();
-        let port = &self.port;
-        let port = *(port);
+        let mut host = self.host.to_string();
+        let port = self.port;
         if port > 1 && port != 80 {
             host.push(':');
             host = host + &port.to_string();
@@ -194,7 +192,7 @@ struct SetNumber {
 }
 
 impl Response for SetNumber {
-    fn response(self:Box<Self>, request: HttpRequestInfo, reader: &mut dyn BufRead, writer: &mut dyn Write) -> std::io::Result<()> {
+    fn response(self: Box<Self>, request: HttpRequestInfo, reader: &mut dyn BufRead, writer: &mut dyn Write) -> std::io::Result<()> {
         let status = HttpStatus::Ok;
         let code = status.get().unwrap();
         let string = status.get_as_string().unwrap();
@@ -218,12 +216,12 @@ impl Response for SetNumber {
 
 
 impl Response for HttpResponse {
-    fn response(self:Box<Self>, request: HttpRequestInfo, reader: &mut dyn BufRead, writer: &mut dyn Write) -> std::io::Result<()> {
+    fn response(self: Box<Self>, request: HttpRequestInfo, reader: &mut dyn BufRead, writer: &mut dyn Write) -> std::io::Result<()> {
         let status = HttpStatus::NotFound;
         let code = status.get().unwrap();
         let string = status.get_as_string().unwrap();
-        write!(writer, "HTTP/1.1 {} {}\r\n", code, string)?;
-        write!(writer, "Date: {} \r\n", Local::now())?;
+        write!(writer, "HTTP/1.1 {} {}\r\n", code, string);
+        write!(writer, "Date: {} \r\n", Local::now());
         let buf = b"<html><body><h1>Not Found</h1></body></html>";
         let length = buf.len();
         write!(writer, "Content-Length: {}", length)?;

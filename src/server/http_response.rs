@@ -99,21 +99,22 @@ pub fn read_header(reader: &mut dyn Read) -> std::io::Result<HttpResponseHeader>
 pub fn read_http_response_info(read: &mut dyn Read) -> std::io::Result<HttpResponseInfo> {
     let first_string = read_line(read);
     let str = first_string.clone();
-    let first_line = HttpResponseFirstLine::new(first_string);
-    println!("begin read response header of {}", str);
-    let headers = read_header(read).unwrap();
+    log::trace!("read response header of {}", str);
 
+    let first_line = HttpResponseFirstLine::new(first_string);
+    let headers = read_header(read).unwrap();
     return Ok(HttpResponseInfo::new(first_line, headers));
 }
-//#[test]
-//pub fn test_read_http_reponse() {
-//    let path = "test/httpresponse/response_a.txt";
-//    //let _string = std::fs::read_to_string(path).unwrap();
-//    let mut reader = std::fs::File::open(path).unwrap();
-//    let response = read_http_response(&mut reader).unwrap();
-//    assert_eq!("OK", response.http_first_line.http_status);
-//    assert_eq!(200, response.http_first_line.http_status_code);
-//    assert_eq!("HTTP/1.1", response.http_first_line.protocol_version);
-//
-//    assert_eq!(5055, response.http_response_header.content_length)
-//}
+
+
+#[test]
+pub fn test_read_http_response() {
+    let path = "test/httpresponse/response_a.txt";
+    //let _string = std::fs::read_to_string(path).unwrap();
+    let mut reader = std::fs::File::open(path).unwrap();
+    let response = read_http_response_info(&mut reader).unwrap();
+    assert_eq!("OK", response.http_first_line.http_status);
+    assert_eq!(200, response.http_first_line.http_status_code);
+    assert_eq!("HTTP/1.1", response.http_first_line.protocol_version);
+    //assert_eq!(5055, response.http_response_header.content_length)
+}

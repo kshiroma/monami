@@ -27,7 +27,7 @@ impl Worker {
         let read = stream_box.try_clone().unwrap();
         let mut write = stream_box.try_clone().unwrap();
         let mut buf_reader = BufReader::new(read);
-        self.handle_read_writer(&mut buf_reader, &mut write);
+        let result = self.handle_read_writer(&mut buf_reader, &mut write);
         //終わり
         stream_box.flush().unwrap();
         stream_box.shutdown(Shutdown::Both).unwrap();
@@ -57,8 +57,7 @@ impl Worker {
 
             if response {
                 //if relayInfo.eq_ignore_ascii_case("set_routing_number") {
-                set_routing_number(writer, self.config.get_routing_number());
-                return Ok(());
+                return set_routing_number(writer, self.config.get_routing_number());
                 //}
             }
         }
@@ -67,15 +66,15 @@ impl Worker {
         let b_relay = std::rc::Rc::new(relay).clone();
         let b_relay2 = b_relay.clone();
         let b_request = std::rc::Rc::new(request).clone();
-        let upstreamOp = Upstream::new(b_relay, b_request);
-        if (upstreamOp.is_none()) {
+        let upstream_op = Upstream::new(b_relay, b_request);
+        if upstream_op.is_none() {
             log::info!("can not connect upstream {}", b_relay2.host);
             service_unavailable(writer).unwrap();
             return Ok(());
         }
 
         self.config.add_count();
-        let mut upstream = upstreamOp.unwrap();
+        let mut upstream = upstream_op.unwrap();
 
         upstream.send_first_line();
         log::trace!("upstream.sendFirstLine()");
