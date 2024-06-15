@@ -9,7 +9,7 @@ use crate::server::config::{RelayConnectionInfo, ServerConfig};
 use crate::server::aaaaaaa::Aaaaaaaa;
 use crate::server::http_request::read_http_request;
 use crate::server::http_response::Response;
-use crate::server::upstream::Upstream;
+use crate::server::downstream::Downstream;
 
 pub struct Worker {
     config: Arc<ServerConfig>,
@@ -66,26 +66,26 @@ impl Worker {
         let b_relay = std::rc::Rc::new(relay).clone();
         let b_relay2 = b_relay.clone();
         let b_request = std::rc::Rc::new(request).clone();
-        let upstream_op = Upstream::new(b_relay, b_request);
-        if upstream_op.is_none() {
-            log::info!("can not connect upstream {}", b_relay2.host);
+        let downstream_op = Downstream::new(b_relay, b_request);
+        if downstream_op.is_none() {
+            log::info!("can not connect downstream {}", b_relay2.host);
             service_unavailable(writer).unwrap();
             return Ok(());
         }
 
         self.config.add_count();
-        let mut upstream = upstream_op.unwrap();
+        let mut downstream = downstream_op.unwrap();
 
-        upstream.send_first_line();
-        log::trace!("upstream.sendFirstLine()");
-        upstream.send_headers();
-        log::trace!("upstream.sendHeader()");
-        upstream.send_body(reader);
-        log::trace!("upstream.sendBody(reader);");
-        upstream.flush();
-        log::trace!("upstream.flush();");
-        let response_info = upstream.read_http_response_info().unwrap();
-        log::trace!("let response_info = upstream.read_http_response_info().unwrap();");
+        downstream.send_first_line();
+        log::trace!("downstream.sendFirstLine()");
+        downstream.send_headers();
+        log::trace!("downstream.sendHeader()");
+        downstream.send_body(reader);
+        log::trace!("downstream.sendBody(reader);");
+        downstream.flush();
+        log::trace!("downstream.flush();");
+        let response_info = downstream.read_http_response_info().unwrap();
+        log::trace!("let response_info = downstream.read_http_response_info().unwrap();");
 
         let aaaaaaa = Aaaaaaaa::new(b_relay2, response_info);
         log::trace!("let aaaaaaa = Downstream::new(response_info);");
@@ -93,8 +93,8 @@ impl Worker {
         log::trace!("aaaaaaa.sendFirstLine(writer);");
         aaaaaaa.send_headers(writer);
         log::trace!("aaaaaaa.sendHeaders(writer);");
-        aaaaaaa.send_body(&mut upstream.buf_reader, writer);
-        log::trace!("aaaaaaa.sendBody(&mut upstream.stream, writer);");
+        aaaaaaa.send_body(&mut downstream.buf_reader, writer);
+        log::trace!("aaaaaaa.sendBody(&mut downstream.stream, writer);");
         writer.flush().unwrap();
         log::trace!("writer.flush();");
         return Ok(());

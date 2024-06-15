@@ -9,7 +9,7 @@ use crate::http::http_status::HttpStatus;
 use crate::server::aaaaaaa::Aaaaaaaa;
 use crate::server::http_request::HttpRequestInfo;
 use crate::server::http_response::Response;
-use crate::server::upstream::Upstream;
+use crate::server::downstream::Downstream;
 
 pub struct RoutingRule {
     name: String,

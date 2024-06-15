@@ -65,7 +65,7 @@ impl Aaaaaaaa {
         );
         let address = relay.get_address();
         a.into_iter().for_each(|b| {
-            string.push_str("X-MONAMI-UPSTREAM");
+            string.push_str("X-MONAMI-DOWNSTREAM");
             string.push_str(": ");
             string.push_str(address.as_str());
             string.push_str("\r\n");

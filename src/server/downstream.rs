@@ -8,15 +8,15 @@ use crate::server::config::RelayConnectionInfo;
 use crate::server::http_request::HttpRequestInfo;
 use crate::server::http_response::HttpResponseInfo;
 
-pub struct Upstream {
+pub struct Downstream {
     relay: Rc<RelayConnectionInfo>,
     request: Rc<HttpRequestInfo>,
     stream: TcpStream,
     pub buf_reader: BufReader<TcpStream>,
 }
 
-impl Upstream {
-    pub fn new(relay: Rc<RelayConnectionInfo>, request: Rc<HttpRequestInfo>) -> Option<Upstream> {
+impl Downstream {
+    pub fn new(relay: Rc<RelayConnectionInfo>, request: Rc<HttpRequestInfo>) -> Option<Downstream> {
         let result: std::io::Result<TcpStream> = relay.connect_relay();
         if result.is_err() {
             return None;
@@ -26,13 +26,13 @@ impl Upstream {
         let read = s.try_clone().unwrap();
         let a = s.try_clone().unwrap();
         let buf_reader = BufReader::new(read);
-        let upstream = Upstream {
+        let downstream = Downstream {
             relay,
             request,
             stream: a,
             buf_reader,
         };
-        return Some(upstream);
+        return Some(downstream);
     }
 
     pub fn send_first_line(&self) {
