@@ -6,15 +6,15 @@ use crate::server::http_response::HttpResponseInfo;
 
 //use std::borrow::Borrow;
 
-pub struct Downstream {
+pub struct Aaaaaaaa {
     response: HttpResponseInfo,
     relay: Rc<RelayConnectionInfo>,
     //writer: Rc<Write>,
 }
 
-impl Downstream {
+impl Aaaaaaaa {
     pub fn new(relay: Rc<RelayConnectionInfo>, response: HttpResponseInfo) -> Self {
-        let downstream = Downstream {
+        let downstream = Aaaaaaaa {
             response,
             relay,
         };
