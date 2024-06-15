@@ -4,17 +4,15 @@ use std::rc::Rc;
 use crate::server::config::RelayConnectionInfo;
 use crate::server::http_response::HttpResponseInfo;
 
-//use std::borrow::Borrow;
-
-pub struct Aaaaaaaa {
+pub struct Upstream {
     response: HttpResponseInfo,
     relay: Rc<RelayConnectionInfo>,
     //writer: Rc<Write>,
 }
 
-impl Aaaaaaaa {
+impl Upstream {
     pub fn new(relay: Rc<RelayConnectionInfo>, response: HttpResponseInfo) -> Self {
-        let downstream = Aaaaaaaa {
+        let downstream = Upstream {
             response,
             relay,
         };

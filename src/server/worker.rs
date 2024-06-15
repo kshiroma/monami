@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use crate::http::http_status::{bad_request, not_found, service_unavailable, set_routing_number};
 use crate::server::config::{RelayConnectionInfo, ServerConfig};
-use crate::server::aaaaaaa::Aaaaaaaa;
+use crate::server::upstream::Upstream;
 use crate::server::http_request::read_http_request;
 use crate::server::http_response::Response;
 use crate::server::downstream::Downstream;
@@ -87,14 +87,14 @@ impl Worker {
         let response_info = downstream.read_http_response_info().unwrap();
         log::trace!("let response_info = downstream.read_http_response_info().unwrap();");
 
-        let aaaaaaa = Aaaaaaaa::new(b_relay2, response_info);
-        log::trace!("let aaaaaaa = Downstream::new(response_info);");
-        aaaaaaa.send_first_line(writer);
-        log::trace!("aaaaaaa.sendFirstLine(writer);");
-        aaaaaaa.send_headers(writer);
-        log::trace!("aaaaaaa.sendHeaders(writer);");
-        aaaaaaa.send_body(&mut downstream.buf_reader, writer);
-        log::trace!("aaaaaaa.sendBody(&mut downstream.stream, writer);");
+        let upstream = Upstream::new(b_relay2, response_info);
+        log::trace!("let upstream = Upstream::new(response_info);");
+        upstream.send_first_line(writer);
+        log::trace!("upstream.sendFirstLine(writer);");
+        upstream.send_headers(writer);
+        log::trace!("upstream.sendHeaders(writer);");
+        upstream.send_body(&mut downstream.buf_reader, writer);
+        log::trace!("upstream.send_body(&mut downstream.buf_reader, writer);");
         writer.flush().unwrap();
         log::trace!("writer.flush();");
         return Ok(());
