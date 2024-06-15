@@ -173,9 +173,9 @@ fn test_read_first_line() -> std::io::Result<()> {
     let first_line = read_line(&mut reader);
     assert_eq!(first_line, "POST /bbb/ddd HTTP/1.1");
 
-    //let headers = read_header(&mut reader);
+    let headers = read_header(&mut reader);
 
-    //println!("{}", body);
+
 
     return Ok(());
 }
