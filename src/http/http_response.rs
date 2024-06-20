@@ -1,8 +1,8 @@
-use std::io::{BufRead, Read, Write};
+use std::io::{BufRead, BufReader, Read, Write};
 
 use crate::http::http_header::{HttpHeaderEntry, parse};
-use crate::server::http_request::HttpRequestInfo;
-use crate::io::read_line;
+use crate::http::http_request::HttpRequestInfo;
+use crate::io::read_line2;
 use std::rc::Rc;
 
 pub trait Response {
@@ -84,10 +84,10 @@ impl HttpResponseHeader {
     }
 }
 
-pub fn read_header(reader: &mut dyn Read) -> std::io::Result<HttpResponseHeader> {
+pub fn read_header(reader: &mut dyn BufRead) -> std::io::Result<HttpResponseHeader> {
     let mut headers: HttpResponseHeader = HttpResponseHeader::empty()?;
     loop {
-        let line = read_line(reader);
+        let line = read_line2(reader);
         if line.is_empty() {
             break;
         }
@@ -96,8 +96,8 @@ pub fn read_header(reader: &mut dyn Read) -> std::io::Result<HttpResponseHeader>
     return Ok(headers);
 }
 
-pub fn read_http_response_info(read: &mut dyn Read) -> std::io::Result<HttpResponseInfo> {
-    let first_string = read_line(read);
+pub fn read_http_response_info(read: &mut dyn BufRead) -> std::io::Result<HttpResponseInfo> {
+    let first_string = read_line2(read);
     let str = first_string.clone();
     log::trace!("read response header of {}", str);
 
@@ -111,7 +111,7 @@ pub fn read_http_response_info(read: &mut dyn Read) -> std::io::Result<HttpRespo
 pub fn test_read_http_response() {
     let path = "test/httpresponse/response_a.txt";
     //let _string = std::fs::read_to_string(path).unwrap();
-    let mut reader = std::fs::File::open(path).unwrap();
+    let mut reader = BufReader::new(std::fs::File::open(path).unwrap());
     let response = read_http_response_info(&mut reader).unwrap();
     assert_eq!("OK", response.http_first_line.http_status);
     assert_eq!(200, response.http_first_line.http_status_code);

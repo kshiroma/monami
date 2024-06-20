@@ -1,13 +1,18 @@
 use crate::server::config::ServerConfig;
+
 pub mod config;
-pub mod http_request;
-pub mod http_response;
 mod worker;
 mod downstream;
 mod upstream;
 
 pub fn listen(config: ServerConfig, port: i32) -> std::io::Result<()> {
     let rc = std::sync::Arc::new(config);
+
+    let manager = std::thread::spawn({
+        || -> std::io::Result<()>{
+            Ok(())
+        }
+    });
     let listener = std::net::TcpListener::bind(format!("0.0.0.0:{}", port))?;
     //listener.set_nonblocking(true);
     for stream in listener.incoming() {
@@ -19,7 +24,7 @@ pub fn listen(config: ServerConfig, port: i32) -> std::io::Result<()> {
                 continue;
             }
         };
-        std::thread::spawn( || -> std::io::Result<()> {
+        std::thread::spawn(|| -> std::io::Result<()> {
             log::trace!("worker start");
             let worker = worker::Worker::new(rc0);
             let result = worker.handle(stream);

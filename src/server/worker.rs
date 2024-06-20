@@ -7,8 +7,8 @@ use std::sync::Arc;
 use crate::http::http_status::{bad_request, not_found, service_unavailable, set_routing_number};
 use crate::server::config::{RelayConnectionInfo, ServerConfig};
 use crate::server::upstream::Upstream;
-use crate::server::http_request::read_http_request;
-use crate::server::http_response::Response;
+use crate::http::http_request::read_http_request;
+use crate::http::http_response::Response;
 use crate::server::downstream::Downstream;
 
 pub struct Worker {

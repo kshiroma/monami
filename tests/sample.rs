@@ -7,7 +7,7 @@ use log::logger;
 
 use monami::server;
 use monami::server::config::{RelayConnectionInfo, RoutingRule, ServerConfig};
-use monami::server::http_request::HttpRequestInfo;
+use monami::http::http_request::HttpRequestInfo;
 
 #[test]
 fn main_sample() {

@@ -5,8 +5,8 @@ use std::rc::Rc;
 
 //use crate::io::read_line;
 use crate::server::config::RelayConnectionInfo;
-use crate::server::http_request::HttpRequestInfo;
-use crate::server::http_response::HttpResponseInfo;
+use crate::http::http_request::HttpRequestInfo;
+use crate::http::http_response::HttpResponseInfo;
 
 pub struct Downstream {
     relay: Rc<RelayConnectionInfo>,
@@ -123,6 +123,6 @@ impl Downstream {
 
     pub fn read_http_response_info(&mut self) -> std::io::Result<HttpResponseInfo> {
         //let mut read = &self.stream;
-        return crate::server::http_response::read_http_response_info(&mut self.buf_reader);
+        return crate::http::http_response::read_http_response_info(&mut self.buf_reader);
     }
 }

@@ -2,7 +2,7 @@ use std::io::prelude::*;
 use std::rc::Rc;
 
 use crate::server::config::RelayConnectionInfo;
-use crate::server::http_response::HttpResponseInfo;
+use crate::http::http_response::HttpResponseInfo;
 
 pub struct Upstream {
     response: HttpResponseInfo,

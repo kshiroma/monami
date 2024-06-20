@@ -175,7 +175,5 @@ fn test_read_first_line() -> std::io::Result<()> {
 
     let headers = read_header(&mut reader);
 
-
-
     return Ok(());
 }
