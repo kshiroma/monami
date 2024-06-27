@@ -38,7 +38,6 @@ mod Monami {
         });
 
         let listener = std::net::TcpListener::bind(format!("0.0.0.0:{}", port))?;
-        //listener.set_nonblocking(true);
         for stream in listener.incoming() {
             //let rc0 = rc.clone();
             let stream = match stream {
@@ -92,34 +91,58 @@ fn test() {
 
 
 mod WebServer {
-    use std::env;
+    use std::{env, thread};
     use std::net::{TcpListener, TcpStream};
     use std::io::prelude::*;
+    use std::ops::Deref;
     use std::sync::{Arc, mpsc, Mutex};
+    use futures::StreamExt;
+
+
+    //Managerから
+
 
     #[test]
-    fn m() {
+    fn m(addr: &str) {
+        //ログ設定
         env::set_var("RUST_LOG", "trace");
         env_logger::init();
 
-        let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+        // TcpListenerの動作制御。複数スレッドで共有
+        let work = Arc::new(Mutex::new(true));
+        let work0 = Arc::clone(&work);
+        let work1 = Arc::clone(&work);
+
+        let listener = TcpListener::bind(addr).unwrap();
         let pool = ThreadPool::new(4);
-        for stream in listener.incoming() {
+        let mut count = 0;
+
+        for stream in listener.incoming().take_while(|r| {
+            let w = work0.lock().unwrap();
+            *w
+        }) {
+            count += 1;
+            let a = count;//値がコピーされているので、スレッドにmoveしてもよい
             let stream = stream.unwrap();
-            std::thread::spawn(|| {
-                log::debug!("Connection establish");
-                handle_connection(stream);
-            });
+            thread::spawn(move || { handle_connection(stream, a) });
+            //pool.execute(|| handle_connection(stream));
+            if (count > 3) {
+                let mut w = work1.lock().unwrap();
+                *w = false;
+            }
         }
     }
 
-    fn handle_connection(mut stream: TcpStream) {
+    fn start() {}
+
+    fn handle_connection(mut stream: TcpStream, count: i32) {
         let mut buffer = [0; 1024];
         let len: usize = stream.read(&mut buffer).unwrap();
         log::debug!("Request: {}", String::from_utf8_lossy(&buffer[0..len]));
         let response = "HTTP/1.1 200 OK \r\n\r\n";
         stream.write(response.as_bytes()).unwrap();
-        stream.write("<html><bod>Hello World</body></html>".as_bytes()).unwrap();
+        write!(stream, "<html><bod>Hello World {}</body></html>", count);
+        //stream.write("<html><bod>Hello World</body></html>".as_bytes()).unwrap();
         stream.flush().unwrap();
     }
 
